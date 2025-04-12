@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5179:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ./backend/src:/app
+      - backend-data:/app/data
+
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        - VITE_API_URL=http://backend/api
+    ports:
+      - "5178:80"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  backend-data:
